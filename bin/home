@@ -4,6 +4,7 @@
 set -eu
 
 cd "$(dirname "$0")/.."
+mkdir -p versions
 
 # Variables
 DEFAULT_VERSION=$(ls versions | tail -1)

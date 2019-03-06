@@ -4,16 +4,22 @@
 set -eu
 
 cd "$(dirname "$0")/.."
+mkdir -p versions
 
 # Variables
 DEFAULT_VERSION=$(ls versions | tail -1)
 VERSION=${1:-$DEFAULT_VERSION}
 
-# If set path already, delete it.
-if echo "$PATH" | grep -q "$PWD"; then
-  PATH=`echo "$PATH" | sed -e "s|$PWD[^:]*:||g"`
+if [ -z "$VERSION" ]; then
+  exit 1
 fi
+
+# If set path already, delete it.
+echo "if echo \"\$PATH\" | grep -q \"$PWD\"; then"
+echo "  PATH=\`echo \"$PATH\" | sed -e \"s|$PWD[^:]*:||g\"\`"
+echo "fi"
 
 # Path
 bin="$(./bin/bin $VERSION)"
 echo "export PATH=\"$bin:\$PATH\""
+exit 0
