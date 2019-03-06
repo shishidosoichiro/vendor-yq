@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# Exit, if return non-zero or use an undefined variable.
+set -eu
+
+cd "$(dirname "$0")/.."
+
+# Variables
+url="$1"
+
+mkdir -p temp
+cd temp
+if which wget &> /dev/null; then
+	wget "$url"
+else
+	curl --progress-bar --show-error --location "$url" --output "$(basename $url)" > /dev/null
+fi
+
+echo "temp/$(basename $url)"

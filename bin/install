@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+
+# Exit, if return non-zero or use an undefined variable.
+set -eu
+
+cd "$(dirname "$0")/.."
+
+# Variables
+DEFAULT_VERSION=$(./bin/versions | tail -1)
+VERSION=${1:-$DEFAULT_VERSION}
+
+os=$(./bin/os)
+distro=$(./bin/distro)
+
+if [ $os = windows ]; then
+	DOWNLOAD_URL=http://nodejs.org/dist/v$VERSION/node-v$VERSION-win-x64.zip
+elif [ $os = darwin ]; then
+	DOWNLOAD_URL=http://nodejs.org/dist/v$VERSION/node-v$VERSION-darwin-x64.tar.xz
+else
+	if [ $distro = alpine ]; then
+		DOWNLOAD_URL=http://nodejs.org/dist/v$VERSION/node-v$VERSION.tar.xz
+	else
+		DOWNLOAD_URL=http://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-x64.tar.xz
+	fi
+fi
+
+# Clean
+clean() {
+	rm -rf temp
+}
+
+# Start
+echo "install: $VERSION"
+clean
+echo "download: $DOWNLOAD_URL"
+filename=$(./bin/download $DOWNLOAD_URL)
+echo "extract: $filename"
+./bin/extract "$filename" "versions/$VERSION"
+if [ $os = linux -a $distro = alpine ]; then
+	./bin/build $VERSION
+fi
