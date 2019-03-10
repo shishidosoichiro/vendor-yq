@@ -7,14 +7,15 @@ cd "$(dirname "$0")/.."
 
 # Variables
 url="$1"
+filename=$(basename $url | sed -e "s/\?.*//")
 
 mkdir -p temp
 cd temp
 if which wget &> /dev/null; then
 	wget "$url"
 else
-	curl --progress-bar --show-error --location "$url" --output "$(basename $url)" > /dev/null
+	curl --progress-bar --show-error --location "$url" --output "$filename" > /dev/null
 fi
 
-echo "temp/$(basename $url)"
+echo "temp/$filename"
 exit 0
