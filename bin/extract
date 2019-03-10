@@ -41,3 +41,4 @@ cd "$pwd"
 rm -rf "$target"
 mkdir -p "$(dirname "$target")"
 mv "$dirname/$base" "$target"
+exit 0
