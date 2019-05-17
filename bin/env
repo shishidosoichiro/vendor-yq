@@ -16,12 +16,12 @@ fi
 
 # If set path already, delete it.
 echo "if echo \"\$PATH\" | grep -q \"$PWD\"; then"
-echo "  PATH=\`echo \"\$PATH\" | sed -e \"s|$PWD[^:]*:||g\"\`"
-echo "fi"
+echo "  PATH=\`echo \"\$PATH\" | sed -e \"s|$PWD[^:]*:||g\"\`;"
+echo "fi;"
 
 # Path
 bin="$(./bin/bin $VERSION)"
 home="$(./bin/home $VERSION)"
-echo "export PATH=\"$bin:\$PATH\""
-echo "export JAVA_HOME=\"$home\""
+echo "export PATH=\"$bin:\$PATH\";"
+echo "export JAVA_HOME=\"$home\";"
 exit 0
