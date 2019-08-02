@@ -6,33 +6,36 @@ set -eu
 cd "$(dirname "$0")/.."
 
 # Variables
-DEFAULT_VERSION=$(./bin/versions | tail -1)
-VERSION=${1:-$DEFAULT_VERSION}
+VERSION=${1:-1.6}
 
-if [ -z "$VERSION" ]; then
-	echo "target version not specified." >&2
-	exit 1
-fi
-
-# specify url
 os=$(./bin/os)
 distro=$(./bin/distro)
+
 if [ $os = windows ]; then
-	DOWNLOAD_URL=<url>
+	ARCHIVE_BASE=yq_windows_amd64.exe 
 elif [ $os = darwin ]; then
-	DOWNLOAD_URL=<url>
+	ARCHIVE_BASE=yq_darwin_amd64
 else
-	DOWNLOAD_URL=<url>
+	ARCHIVE_BASE=yq_linux_amd64
 fi
 
+DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/download/$VERSION/$ARCHIVE_BASE
+
+# Clean
+clean() {
+	rm -rf temp
+}
+
 # Start
-echo "install: $VERSION"
-echo "clean: temp"
-rm -rf temp
-echo "download: $DOWNLOAD_URL"
+clean
 filename=$(./bin/download $DOWNLOAD_URL)
-echo "extract: $filename"
-./bin/extract "$filename" "versions/$VERSION"
-echo "build $VERSION"
-./bin/build $VERSION
-exit 0
+
+rm -rf "versions/$VERSION"
+mkdir -p "versions/$VERSION/bin"
+if [ $os = windows ]; then
+	mv "$filename" "versions/$VERSION/bin/yq.exe"
+elif [ $os = darwin ]; then
+	mv "$filename" "versions/$VERSION/bin/yq"
+else
+	mv "$filename" "versions/$VERSION/bin/yq"
+fi

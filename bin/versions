@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Exit, if return non-zero or use an undefined variable.
 set -eu
@@ -6,9 +6,6 @@ set -eu
 cd "$(dirname "$0")/.."
 
 # Variables
-URL=<version-url>
+GIT_REPO_URL=https://github.com/mikefarah/yq.git
 
-#filename=$(./download $URL)
-#cat $filename | egrep "<a href=\"v" | sed -e "s/^.*v\([0-9]\{1,2\}\.[0-9]\{1,2\}\.[0-9]\{1,2\}\).*$/\1/g" | sort -t. -k 1.1,1n -k 2,2n -k 3,3n -k 4,4n
-git ls-remote --tags --refs $URL | sed 's/[\t ]\+/\t/g' | cut -f2 | sed 's|refs/tags/v||g' | sort -t. -k 1.1,1n -k 2,2n -k 3,3n -k 4,4n
-
+git ls-remote --tags --refs $GIT_REPO_URL | sed 's/[\t ]\+/\t/g' | cut -f2 | sed 's|refs/tags/||g' | grep -v '^v' | grep -v 'list' | sort -t. -k 1.1,1n -k 2,2n -k 3,3n -k 4,4n
